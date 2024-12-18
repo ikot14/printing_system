@@ -29,17 +29,24 @@
                </div>
                @endif
  
-               <form action="{{ route('store.file') }}" method="POST" enctype="multipart/form-data">
-                  @csrf
-                  <div class="row">
-                     <div class="col-md-6">
-                        <input type="file" name="file" class="form-control"/>
-                     </div>
-                     <div class="col-md-6">
-                        <button type="submit" class="btn btn-success">Upload File...</button>
-                     </div>
-                  </div>
-               </form>
+                                 <form action="{{ route('file.store') }}" method="POST" enctype="multipart/form-data">
+                     @csrf
+
+                     <!-- Student Name -->
+                     <label for="student_name">Student Name</label>
+                     <input type="text" name="student_name" id="student_name" required>
+
+                     <!-- Student ID -->
+                     <label for="student_id">Student ID</label>
+                     <input type="text" name="student_id" id="student_id" required>
+
+                     <!-- File Upload -->
+                     <label for="file">Upload File</label>
+                     <input type="file" name="file" id="file" required>
+
+                     <button type="submit">Submit</button>
+                  </form>
+
             </div>
          </div>
       </div>

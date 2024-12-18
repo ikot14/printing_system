@@ -3,6 +3,7 @@ use App\Http\Controllers\CheckController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FileUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,9 @@ Route::middleware(['auth'])->group(function () {
 });
 // Correct example of defining a named route
 Route::get('/check-deleted', [CheckController::class, 'checkDeleted'])->name('check.deleted');
+
+Route::get('file-upload', [ FileUploadController::class, 'getFileUploadForm' ])->name('get.fileupload');
+Route::post('file-upload', [ FileUploadController::class, 'store' ])->name('store.file');
 
 
 

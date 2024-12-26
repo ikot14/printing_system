@@ -1,61 +1,50 @@
 <?php
+
 use App\Http\Controllers\CheckController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FileUploadController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FileUploadController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+| Register web routes for your application.
 |
 */
 
-
-
-
 // Redirect to login for unauthenticated users
-Route::get('/', function () {
-    return redirect(route('login'));
-});
+Route::get('/', fn() => redirect(route('login')));
 
 // Auth routes for login, registration, etc.
 Auth::routes();
 
-// Home route
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-// Group user management routes under authentication middleware
+// Authenticated routes
 Route::middleware(['auth'])->group(function () {
-    // User Management Routes (with resource controller for CRUD)
-    Route::resource('users', UserController::class);
+    // Home route
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    // Admin route - accessible only to authenticated users
-    Route::get('/admin', function () {
-        return view('admin.index');  // Adjust the view path if needed
-    })->name('admin.index');
-});
-
-// Protect user-related routes from being accessed by deleted users
-Route::middleware(['auth'])->group(function () {
-    // Specific user routes requiring the 'check.deleted' middleware
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.stor');
-    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    // User Management
+    Route::resource('users', UserController::class)->except(['destroy']);
     
+    // Admin routes
+    Route::get('/admin', fn() => view('admin.index'))->name('admin.index');
+    Route::get('admin', [FileUploadController::class, 'index'])->name('files');
+
+    // File upload
+    Route::get('FileUpload', [FileUploadController::class, 'getFileUploadForm'])->name('get.FileUpload');
+    Route::post('FileUpload', [FileUploadController::class, 'store'])->name('store.file');
+
+    Route::get('/download/{id}', [FileUploadController::class, 'download'])->name('download.file');
+    
+    // Protect specific user routes
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+
+   
 });
-// Correct example of defining a named route
+
+// Additional route to check for deleted users
 Route::get('/check-deleted', [CheckController::class, 'checkDeleted'])->name('check.deleted');
-
-Route::get('file-upload', [ FileUploadController::class, 'getFileUploadForm' ])->name('get.fileupload');
-Route::post('file-upload', [ FileUploadController::class, 'store' ])->name('store.file');
-
-
-
-
-
 

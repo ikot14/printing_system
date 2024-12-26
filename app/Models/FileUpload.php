@@ -1,11 +1,25 @@
 <?php
 
-namespace App\Models;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class FileUpload extends Model
+return new class extends Migration
 {
-    use HasFactory;
-}
+    public function up(): void
+    {
+        Schema::create('FileUpload', function (Blueprint $table) {
+            $table->id();
+            $table->string('student_name');
+            $table->string('student_id');
+            $table->string('file_name');
+            $table->string('file_path');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('FileUpload');
+    }
+};
